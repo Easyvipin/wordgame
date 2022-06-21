@@ -1,4 +1,3 @@
-import { set } from "express/lib/application";
 import React, { createContext, useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
 
@@ -11,7 +10,7 @@ const SocketContextProvider = ({ children }) => {
   const [userId, setUserId] = useState(null);
   const [clientId, setClientId] = useState(null);
   const [call, setCall] = useState({});
-  const [signaling, setSignaling] = useState(false);
+  const [signaling, setSignaling] = useState(true);
 
   useEffect(() => {
     socket.on("clientConnected", (id) => {
