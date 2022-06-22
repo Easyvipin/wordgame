@@ -69,7 +69,7 @@ const JoinForm = () => {
         <StyledButton marginTop="2rem" background={colors.primary}>
           Join
         </StyledButton>
-        <StyledButton background={colors.primary}>Invite Friend</StyledButton>
+        <StyledButton background={colors.primary}>Start</StyledButton>
       </form>
     </Card>
   );
