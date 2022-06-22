@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import colors from "@app/themes/colors";
 import fonts from "@app/themes/fonts";
+import Rings from "../rings.svg";
+
 const StyledDivContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -42,25 +44,56 @@ const InsideContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 50%;
+  padding: 1rem 1rem;
 `;
 
-const ConnectInterface = ({ connectType = "start" }) => {
+const StyledDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledHeader = styled.div`
+  font-size: ${fonts.size.medium};
+  color: ${colors.headline};
+  font-family: ${fonts.family.monts};
+`;
+
+const ConnectInterface = ({ connectType = "request", called = false }) => {
   const renderInviteInterface = () => {
     return (
       <ConnectContainer>
         <InsideContainer>
-          <h3>One Step Away...</h3>
+          <h4>One Step Away...</h4>
           <StyledButton background={colors.primary}>Invite</StyledButton>
         </InsideContainer>
-        <InsideContainer>
-          <h4>JOHN is requesting to join..</h4>
-          <StyledButton background={colors.Tertiary}>Accept</StyledButton>
+        <InsideContainer borderLeft="2px dashed #fff">
+          {called ? (
+            <StyledDiv>
+              <h4>JOHN is waiting to join..</h4>
+              <StyledButton background={colors.Tertiary}>Accept</StyledButton>
+            </StyledDiv>
+          ) : (
+            <StyledDiv>
+              <h4>Requesting to Join</h4>
+              <img src={Rings} />
+            </StyledDiv>
+          )}
         </InsideContainer>
       </ConnectContainer>
     );
   };
   const renderRequestingInterface = () => {
-    return <div>Requesting..</div>;
+    return (
+      <InsideContainer>
+        <StyledDiv>
+          <StyledHeader>Request Sent</StyledHeader>
+          <h4>You'll Shortly Join</h4>
+          <img src={Rings} />
+        </StyledDiv>
+      </InsideContainer>
+    );
   };
 
   return (
