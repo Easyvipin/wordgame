@@ -5,12 +5,16 @@ const SocketContext = createContext();
 const socket = io("http://localhost:5000");
 
 const SocketContextProvider = ({ children }) => {
-  const [userName, setUserName] = useState("name");
-  const [clientName, setClientName] = useState("name");
+  const [userName, setUserName] = useState("");
+  const [clientName, setClientName] = useState("");
   const [userId, setUserId] = useState(null);
   const [clientId, setClientId] = useState(null);
-  const [call, setCall] = useState({});
-  const [signaling, setSignaling] = useState(true);
+  const [call, setCall] = useState({
+    calling: false,
+    status: "idle",
+  });
+  const [signaling, setSignaling] = useState(false);
+  const [action, setAction] = useState("");
 
   useEffect(() => {
     socket.on("clientConnected", (id) => {
@@ -18,52 +22,67 @@ const SocketContextProvider = ({ children }) => {
       setUserId(id);
     });
 
-    socket.on("callUser", ({ from, userName }) => {
-      setClientId(from);
-      setCall({ isRecieving: true, joined: false });
-      setClientName(userName);
+    socket.on("callRequest", ({ from }) => {
+      setClientId(from.id);
+      setClientName(from.name);
+      setCall({
+        calling: true,
+        status: "requesting",
+      });
+    });
+
+    socket.on("accepted", ({ from }) => {
+      setClientName(from.name);
+      setCall({
+        calling: true,
+        status: "accepted",
+      });
     });
   }, []);
 
-  const makeGame = (id) => {
-    socket.emit("callSignal", {
-      calledId: id,
-      from: userId,
-      userName,
-    });
+  const sendRequest = (userData, clientData) => {
     setSignaling(true);
-    socket.on("callAccepted", ({ from, clientName }) => {
-      setCall({ ...call, joined: true });
-      setClientName(clientName);
-      setClientId(from);
+    setAction("sending");
+    socket.emit("calling", {
+      userData,
+      clientData,
     });
   };
 
-  const joinGame = () => {
-    socket.emit("answerCall", {
-      to: clientId,
-      from: userId,
-      clientName: userName,
+  const acceptRequest = (userData, clientData) => {
+    console.log(userData, clientData);
+    socket.emit("callAccepted", {
+      userData,
+      clientData,
     });
-    setSignaling(true);
-    setCall({ ...call, joined: true });
+    setCall({
+      calling: true,
+      status: "accepted",
+    });
   };
+
+  console.log(call.status);
+  console.log(clientName);
+  console.log(clientId);
 
   return (
     <SocketContext.Provider
       value={{
-        clientId,
-        setClientId,
         userName,
         setUserName,
+        clientId,
+        setClientId,
         clientName,
         setClientName,
-        makeGame,
-        joinGame,
         socket,
         call,
         userId,
         signaling,
+        setSignaling,
+        action,
+        setAction,
+        sendRequest,
+        acceptRequest,
       }}
     >
       {children}

@@ -1,6 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { colors, fonts } from "@themes";
+import { useRef } from "react";
+import { SocketContext } from "@app/Contexts/SocketContext";
+import { useContext } from "react";
+import { useState } from "react";
 
 const Card = styled.div`
   margin: 1rem 1rem;
@@ -54,22 +58,99 @@ const FormContainer = styled.div`
   margin-bottom: 0.7rem;
 `;
 
+const StyledHint = styled.span`
+  color: #ccc;
+  display: block;
+`;
+
 const JoinForm = () => {
+  const [hint, setHint] = useState({
+    nameValidation: false,
+    idValidtion: false,
+  });
+
+  const {
+    userName,
+    setUserName,
+    setClientId,
+    clientId,
+    userId,
+    sendRequest,
+    setSignaling,
+    setAction,
+  } = useContext(SocketContext);
+
+  const nameRef = useRef();
+  const uuidRef = useRef();
+
+  const handleOnChange = (e, type) => {
+    if (type == "name") {
+      setUserName(e.target.value);
+    } else {
+      setClientId(e.target.value);
+    }
+  };
+
+  const joinHandler = (e) => {
+    e.preventDefault();
+    let inputName = nameRef.current.value.length;
+    let inputUuid = uuidRef.current.value.length;
+    if (inputName > 0 && inputUuid > 0) {
+      const userData = {
+        name: userName,
+        id: userId,
+      };
+      const clientData = {
+        id: clientId,
+      };
+      sendRequest(userData, clientData);
+    } else {
+      nameRef.current.focus();
+    }
+  };
+
+  const startHandler = (e) => {
+    e.preventDefault();
+    if (nameRef.current.value != "") {
+      setSignaling(true);
+      setAction("rec");
+    } else {
+      nameRef.current.focus();
+    }
+  };
+
   return (
     <Card>
       <form>
         <FormContainer>
           <StyledLabel for="name">Name</StyledLabel>
-          <StyledInput type="text"></StyledInput>
+          <StyledInput
+            ref={nameRef}
+            onChange={(e) => handleOnChange(e, "name")}
+            type="text"
+          ></StyledInput>
         </FormContainer>
         <FormContainer>
-          <StyledLabel for="userId">uuid</StyledLabel>
-          <StyledInput type="text"></StyledInput>
+          <StyledLabel for="clientId">Unique Id</StyledLabel>
+          <StyledInput
+            ref={uuidRef}
+            onChange={(e) => handleOnChange(e, "uuid")}
+            type="text"
+          ></StyledInput>
         </FormContainer>
-        <StyledButton marginTop="2rem" background={colors.primary}>
+        <StyledButton
+          marginTop="2rem"
+          onClick={(e) => joinHandler(e)}
+          background={colors.primary}
+        >
           Join
         </StyledButton>
-        <StyledButton background={colors.primary}>Start</StyledButton>
+        <StyledButton
+          background={colors.primary}
+          onClick={(e) => startHandler(e)}
+        >
+          Start
+        </StyledButton>
       </form>
     </Card>
   );

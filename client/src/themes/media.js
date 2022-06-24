@@ -12,6 +12,4 @@ const media = generateMedia({
   desktop: `${breakPoints.DESKTOP}/16}em`,
 });
 
-console.log(media);
-
 export default media;

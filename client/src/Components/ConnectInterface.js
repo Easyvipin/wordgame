@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import { SocketContext } from "@app/Contexts/SocketContext";
 import colors from "@app/themes/colors";
 import fonts from "@app/themes/fonts";
 import Rings from "../rings.svg";
+import { useContext } from "react";
 
 const StyledDivContainer = styled.div`
   display: flex;
@@ -60,7 +62,29 @@ const StyledHeader = styled.div`
   font-family: ${fonts.family.monts};
 `;
 
-const ConnectInterface = ({ connectType = "request", called = false }) => {
+const ConnectInterface = () => {
+  const {
+    action,
+    call,
+    acceptRequest,
+    userName,
+    userId,
+    clientName,
+    clientId,
+  } = useContext(SocketContext);
+
+  const handleClick = () => {
+    const userData = {
+      name: userName,
+      id: userId,
+    };
+    const clientData = {
+      name: clientName,
+      id: clientId,
+    };
+    acceptRequest(userData, clientData);
+  };
+
   const renderInviteInterface = () => {
     return (
       <ConnectContainer>
@@ -69,10 +93,12 @@ const ConnectInterface = ({ connectType = "request", called = false }) => {
           <StyledButton background={colors.primary}>Invite</StyledButton>
         </InsideContainer>
         <InsideContainer borderLeft="2px dashed #fff">
-          {called ? (
+          {call.status == "requesting" ? (
             <StyledDiv>
-              <h4>JOHN is waiting to join..</h4>
-              <StyledButton background={colors.Tertiary}>Accept</StyledButton>
+              <h4>{clientName} is waiting to join..</h4>
+              <StyledButton onClick={handleClick} background={colors.Tertiary}>
+                Accept
+              </StyledButton>
             </StyledDiv>
           ) : (
             <StyledDiv>
@@ -98,9 +124,7 @@ const ConnectInterface = ({ connectType = "request", called = false }) => {
 
   return (
     <StyledDivContainer>
-      {connectType === "start"
-        ? renderInviteInterface()
-        : renderRequestingInterface()}
+      {action === "rec" ? renderInviteInterface() : renderRequestingInterface()}
     </StyledDivContainer>
   );
 };

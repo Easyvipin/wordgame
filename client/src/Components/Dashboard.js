@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import ConnectInterface from "./ConnectInterface";
+import { SocketContext } from "@app/Contexts/SocketContext";
 
 const Dashboard = () => {
+  const { call } = useContext(SocketContext);
   return (
     <div>
-      <ConnectInterface />
+      {call.status === "accepted" ? "Game Dashboard" : <ConnectInterface />}
     </div>
   );
 };

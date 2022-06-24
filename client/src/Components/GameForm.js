@@ -3,8 +3,6 @@ import styled from "styled-components";
 import FlexContainer from "@Components/FlexContainer";
 import JoinForm from "./JoinForm";
 import Settings from "./Settings";
-
-import { SocketContext } from "@app/Contexts/SocketContext";
 import { colors, fonts } from "@themes";
 
 const Header = styled.div`
@@ -24,7 +22,6 @@ const Para = styled.p`
 `;
 
 const GameForm = () => {
-  const { makeGame, joinGame } = useContext(SocketContext);
   return (
     <FlexContainer
       flex="1"
