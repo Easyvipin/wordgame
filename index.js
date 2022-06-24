@@ -17,7 +17,19 @@ const PORT = 5000;
 io.on("connection", (socket) => {
   socket.emit("clientConnected", socket.id);
 
-  socket.on("callSignal", ({ calledId, from, userName }) => {
+  socket.on("calling", ({ userData, clientData }) => {
+    io.to(clientData.id).emit("callRequest", {
+      from: userData,
+    });
+  });
+
+  socket.on("callAccepted", ({ userData, clientData }) => {
+    io.to(clientData.id).emit("accepted", {
+      from: userData,
+    });
+  });
+
+  /* socket.on("callSignal", ({ calledId, from, userName }) => {
     console.log(calledId);
     io.to(calledId).emit("callUser", { from, userName });
   });
@@ -29,7 +41,7 @@ io.on("connection", (socket) => {
 
   socket.on("sendMessage", ({ message, from, to }) => {
     io.to(to).emit("getMessage", { message, from });
-  });
+  }); */
 });
 
 server.listen(PORT, () => {
