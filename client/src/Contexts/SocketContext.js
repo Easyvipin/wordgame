@@ -18,7 +18,6 @@ const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     socket.on("clientConnected", (id) => {
-      console.log(id);
       setUserId(id);
     });
 
@@ -50,7 +49,6 @@ const SocketContextProvider = ({ children }) => {
   };
 
   const acceptRequest = (userData, clientData) => {
-    console.log(userData, clientData);
     socket.emit("callAccepted", {
       userData,
       clientData,
@@ -60,10 +58,6 @@ const SocketContextProvider = ({ children }) => {
       status: "accepted",
     });
   };
-
-  console.log(call.status);
-  console.log(clientName);
-  console.log(clientId);
 
   return (
     <SocketContext.Provider

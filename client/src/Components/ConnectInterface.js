@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { SocketContext } from "@app/Contexts/SocketContext";
 import colors from "@app/themes/colors";
 import fonts from "@app/themes/fonts";
 import Rings from "../rings.svg";
 import { useContext } from "react";
+import ShareComponent from "./ShareComponent";
 
 const StyledDivContainer = styled.div`
   display: flex;
@@ -73,6 +74,8 @@ const ConnectInterface = () => {
     clientId,
   } = useContext(SocketContext);
 
+  const [display, setDisplay] = useState(false);
+
   const handleClick = () => {
     const userData = {
       name: userName,
@@ -85,12 +88,34 @@ const ConnectInterface = () => {
     acceptRequest(userData, clientData);
   };
 
+  const openShareInterface = () => {
+    if (!navigator.share) {
+      navigator
+        .share({
+          title: "Come Play with me on RapidWord",
+          url: `http://localhost:3000?uuid=${userId}`,
+          text: "A place for words",
+        })
+        .then(() => {
+          console.log("thanks for sharing");
+        });
+    } else {
+      console.log("valle");
+      setDisplay(true);
+    }
+  };
+
   const renderInviteInterface = () => {
     return (
       <ConnectContainer>
         <InsideContainer>
           <h4>One Step Away...</h4>
-          <StyledButton background={colors.primary}>Invite</StyledButton>
+          <StyledButton
+            background={colors.primary}
+            onClick={openShareInterface}
+          >
+            Invite
+          </StyledButton>
         </InsideContainer>
         <InsideContainer borderLeft="2px dashed #fff">
           {call.status == "requesting" ? (
@@ -112,18 +137,26 @@ const ConnectInterface = () => {
   };
   const renderRequestingInterface = () => {
     return (
-      <InsideContainer>
-        <StyledDiv>
-          <StyledHeader>Request Sent</StyledHeader>
-          <h4>You'll Shortly Join</h4>
-          <img src={Rings} />
-        </StyledDiv>
-      </InsideContainer>
+      <>
+        <InsideContainer>
+          <StyledDiv>
+            <StyledHeader>Request Sent</StyledHeader>
+            <h4>You'll Shortly Join</h4>
+            <img src={Rings} />
+          </StyledDiv>
+        </InsideContainer>
+      </>
     );
   };
 
   return (
     <StyledDivContainer>
+      {display && (
+        <ShareComponent
+          setDisplay={setDisplay}
+          url={`Come Play with Words , Invite your Partner http://localhost:3000?id=${userId}`}
+        />
+      )}
       {action === "rec" ? renderInviteInterface() : renderRequestingInterface()}
     </StyledDivContainer>
   );
