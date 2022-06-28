@@ -21,7 +21,7 @@ const Para = styled.p`
   font-size: 1.2rem;
 `;
 
-const GameForm = () => {
+const GameForm = ({ existUuid }) => {
   return (
     <FlexContainer
       flex="1"
@@ -35,7 +35,7 @@ const GameForm = () => {
         <Heading>RapiWord</Heading>
         <Para>Get better with words while you PLAY!</Para>
       </Header>
-      <JoinForm />
+      <JoinForm existUuid={existUuid} />
       <Settings />
     </FlexContainer>
   );

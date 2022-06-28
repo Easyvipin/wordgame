@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { SocketContext } from "@app/Contexts/SocketContext";
 import { useContext } from "react";
 import { useState } from "react";
+import { useEffect } from "react";
 
 const Card = styled.div`
   margin: 1rem 1rem;
@@ -63,11 +64,15 @@ const StyledHint = styled.span`
   display: block;
 `;
 
-const JoinForm = () => {
+const JoinForm = ({ existUuid }) => {
   const [hint, setHint] = useState({
     nameValidation: false,
     idValidtion: false,
   });
+
+  useEffect(() => {
+    setClientId(existUuid);
+  }, [existUuid]);
 
   const {
     userName,
@@ -87,14 +92,16 @@ const JoinForm = () => {
     if (type == "name") {
       setUserName(e.target.value);
     } else {
-      setClientId(e.target.value);
+      setClientId(e.target.value || existUuid);
     }
   };
 
   const joinHandler = (e) => {
     e.preventDefault();
+
     let inputName = nameRef.current.value.length;
     let inputUuid = uuidRef.current.value.length;
+
     if (inputName > 0 && inputUuid > 0) {
       const userData = {
         name: userName,
@@ -134,6 +141,7 @@ const JoinForm = () => {
           <StyledLabel for="clientId">Unique Id</StyledLabel>
           <StyledInput
             ref={uuidRef}
+            value={existUuid}
             onChange={(e) => handleOnChange(e, "uuid")}
             type="text"
           ></StyledInput>

@@ -1,6 +1,7 @@
 import colors from "@app/themes/colors";
 import fonts from "@app/themes/fonts";
 import styled from "styled-components";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const StyledShareComponent = styled.div`
   height: 100vh;
@@ -51,12 +52,18 @@ const ShareComponent = ({ url, setDisplay }) => {
     setDisplay(false);
   };
 
+  const handleCopy = () => {
+    setDisplay(false);
+  };
+
   return (
     <StyledShareComponent>
       <StyledButton onClick={handleClose}>X</StyledButton>
       <Modal>
         <p>{url}</p>
-        <StyledCopy>Copy</StyledCopy>
+        <CopyToClipboard text={url}>
+          <StyledCopy onClick={handleCopy}>Copy</StyledCopy>
+        </CopyToClipboard>
       </Modal>
     </StyledShareComponent>
   );

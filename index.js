@@ -18,12 +18,14 @@ io.on("connection", (socket) => {
   socket.emit("clientConnected", socket.id);
 
   socket.on("calling", ({ userData, clientData }) => {
+    console.log(userData, clientData);
     io.to(clientData.id).emit("callRequest", {
       from: userData,
     });
   });
 
   socket.on("callAccepted", ({ userData, clientData }) => {
+    console.log(userData, clientData);
     io.to(clientData.id).emit("accepted", {
       from: userData,
     });

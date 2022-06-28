@@ -100,7 +100,6 @@ const ConnectInterface = () => {
           console.log("thanks for sharing");
         });
     } else {
-      console.log("valle");
       setDisplay(true);
     }
   };
