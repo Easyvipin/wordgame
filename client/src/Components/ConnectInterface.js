@@ -6,6 +6,7 @@ import fonts from "@app/themes/fonts";
 import Rings from "../rings.svg";
 import { useContext } from "react";
 import ShareComponent from "./ShareComponent";
+import media from "@app/themes/media";
 
 const StyledDivContainer = styled.div`
   display: flex;
@@ -21,6 +22,11 @@ const ConnectContainer = styled.div`
   box-shadow: 0px 0px 4px ${colors.lightBg};
   padding: 1rem 1rem;
   width: 30%;
+  ${media.lessThan("1000px")`
+  width:90%;
+  flex-wrap:wrap;
+   `}
+  flex-wrap: wrap;
 `;
 
 const StyledButton = styled.button`
@@ -48,6 +54,11 @@ const InsideContainer = styled.div`
   align-items: center;
   width: 50%;
   padding: 1rem 1rem;
+
+  ${media.lessThan("1000px")`
+  width: 100%;
+  border-left:none;
+  `}
 `;
 
 const StyledDiv = styled.div`

@@ -7,7 +7,7 @@ const Dashboard = () => {
   const { call } = useContext(SocketContext);
   return (
     <div>
-      {call.status === "accepted" ? <GameDashboard /> : <GameDashboard />}
+      {call.status === "accepted" ? <GameDashboard /> : <ConnectInterface />}
     </div>
   );
 };

@@ -1,18 +1,25 @@
+import media from "@app/themes/media";
 import fonts from "@app/themes/fonts";
 import React from "react";
 import styled from "styled-components";
 import VerifyIcon from "../loading.gif";
+import cover from "../cover.jpg";
+import colors from "@app/themes/colors";
 
 const MessageContainer = styled.div`
-  width: inherit;
+  width: 100%;
   flex: 8;
-  border: 2px solid red;
   overflow: scroll;
   display: flex;
   flex-direction: column-reverse;
   padding-left: 1rem;
   padding-right: 1rem;
   padding-bottom: 1rem;
+  background-image: url(${cover});
+  background-size: cover;
+  ${media.lessThan("1000px")`
+  flex: 9;
+   `}
 `;
 
 const Message = styled.div`
@@ -27,8 +34,11 @@ const Text = styled.div`
   font-size: 1.2rem;
   min-width: 6rem;
   width: auto;
-  border: 2px solid green;
+  border: 2px solid ${colors.primary};
+  border-radius: 3px;
   padding: 0.3rem;
+  background-color: ${colors.lightBg};
+  box-shadow: 0px 0px 4px ${colors.primary};
 `;
 
 const Icon = styled.img`

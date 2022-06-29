@@ -1,4 +1,5 @@
 import colors from "@app/themes/colors";
+import media from "@app/themes/media";
 import fonts from "@app/themes/fonts";
 import React from "react";
 import styled from "styled-components";
@@ -14,17 +15,30 @@ const FlexContainer = styled.div`
   border: 2px solid pink;
   margin: 2rem;
   position: relative;
+  justify-content: space-between;
+  ${media.lessThan("1000px")`
+   padding:0.2rem;
+   margin:1rem;
+  `}
 `;
 
 const UserPlayerStatsContainer = styled.div`
   flex: 1;
   border-radius: 12px 0px 0px 12px;
   padding-left: 1rem;
+  text-align: left;
+  ${media.lessThan("1000px")`
+   padding:0.4rem;
+  `}
 `;
 
 const UserText = styled.span`
   font-size: 1.5rem;
   font-weight: ${fonts.weight.extraBold};
+
+  ${media.lessThan("1000px")`
+  font-size:1rem;
+  `}
 `;
 
 const UserStyledScore = styled.span`
@@ -32,22 +46,33 @@ const UserStyledScore = styled.span`
   display: inline-block;
   font-weight: ${fonts.weight.extraBold};
   font-family: ${fonts.family.monoton};
-  width: 300px;
+  width: calc(80% / 100vw);
   padding-left: 1rem;
-  border: 2px solid white;
   margin-left: 1rem;
-  border-radius: 12px 0px 0px 12px;
+
+  ${media.lessThan("1000px")`
+  font-size:0.9rem;
+  width:auto;
+  border:none;
+  `}
 `;
 
 const ClientPlayerStatsContainer = styled.div`
   flex: 1;
   border-radius: 12px 0px 0px 12px;
   padding-right: 1rem;
+  text-align: right;
+  ${media.lessThan("1000px")`
+   padding:0.4rem;
+  `}
 `;
 
 const ClientText = styled.span`
   font-size: 1.5rem;
   font-weight: ${fonts.weight.extraBold};
+  ${media.lessThan("1000px")`
+  font-size:1rem;
+  `}
 `;
 
 const ClientStyledScore = styled.span`
@@ -55,12 +80,17 @@ const ClientStyledScore = styled.span`
   display: inline-block;
   font-weight: ${fonts.weight.extraBold};
   font-family: ${fonts.family.monoton};
-  width: 300px;
+  width: calc(80% / 100vw);
   padding-right: 1rem;
-  border: 2px solid white;
   margin-right: 1rem;
-  border-radius: 0px 12px 12px 0px;
   text-align: right;
+
+  ${media.lessThan("1000px")`
+  font-size:0.9rem;
+  width:auto;
+  padding-right: 0.5rem;
+  border:none;
+  `}
 `;
 
 const WordContainer = styled.div`
@@ -72,7 +102,7 @@ const WordContainer = styled.div`
   font-size: 2rem;
   font-weight: ${fonts.weight.extraBold};
   background-color: #fff;
-  left: 46%;
+  left: 47%;
   top: 4.4%;
   z-index: 2;
   background-color: ${colors.primary};
@@ -81,6 +111,13 @@ const WordContainer = styled.div`
   justify-content: center;
   align-items: center;
   border: 5px solid #fff;
+
+  ${media.lessThan("1000px")`
+  width: 70px;
+  height: 70px;
+  left: 44%;
+  top:6.5%;
+  `}
 `;
 
 const ScoreDashboard = () => {
