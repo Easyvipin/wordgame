@@ -15,6 +15,9 @@ const SocketContextProvider = ({ children }) => {
   });
   const [signaling, setSignaling] = useState(false);
   const [action, setAction] = useState("");
+  const [level, setLevel] = useState("easy");
+  const [turns, setTurns] = useState(4);
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     socket.on("clientConnected", (id) => {
@@ -38,6 +41,20 @@ const SocketContextProvider = ({ children }) => {
       });
     });
   }, []);
+
+  useEffect(() => {
+    socket.on("gotMessage", ({ word }) => {
+      setMessages([
+        ...messages,
+        {
+          word,
+          type: "client",
+        },
+      ]);
+    });
+  }, [messages]);
+
+  console.log(messages);
 
   const sendRequest = (userData, clientData) => {
     setSignaling(true);
@@ -77,6 +94,8 @@ const SocketContextProvider = ({ children }) => {
         setAction,
         sendRequest,
         acceptRequest,
+        setMessages,
+        messages,
       }}
     >
       {children}

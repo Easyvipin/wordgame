@@ -56,16 +56,22 @@ const Icon = styled.img`
 
 /* <img src="https://img.icons8.com/flat-round/64/000000/delete-sign.png"/> */
 
-const MessageArena = () => {
-  return (
-    <MessageContainer>
-      <Message side="client">
-        <Text>Hello</Text>
+const MessageArena = ({ messages }) => {
+  const renderMessageOnType = () => {
+    return messages.map((eachMessage) => (
+      <Message side={eachMessage.type}>
+        <Text>{eachMessage.word}</Text>
         <Icon
-          side="client"
+          side={eachMessage.type}
           src="https://img.icons8.com/color/48/000000/verified-account.png"
         ></Icon>
       </Message>
+    ));
+  };
+  return (
+    <MessageContainer>
+      {messages.length > 0 && renderMessageOnType()}
+      {/* 
       <Message side="user">
         {" "}
         <Text>Hello</Text>
@@ -84,7 +90,7 @@ const MessageArena = () => {
       </Message>
       <Message side="client">
         <Text>Hello</Text>{" "}
-      </Message>
+  </Message> */}
     </MessageContainer>
   );
 };

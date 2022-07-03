@@ -3,6 +3,10 @@ import styled from "styled-components";
 import media from "styled-media-query";
 import MessageArena from "./MessageArena";
 import ScoreDashboard from "./ScoreDashboard";
+import { SocketContext } from "@app/Contexts/SocketContext";
+import { useContext } from "react";
+import { useEffect } from "react";
+import { useRef } from "react";
 
 const ChatLayout = styled.div`
   box-sizing: border-box;
@@ -67,15 +71,37 @@ const StyledButton = styled.button`
 `;
 
 const ChatComponent = () => {
+  const { socket, userId, clientId, setMessages, messages } =
+    useContext(SocketContext);
+  const inputRef = useRef();
+  console.log(clientId);
+  const handleSend = () => {
+    console.log("called");
+    if (inputRef.current.value.length > 2) {
+      console.log("called");
+      socket.emit("wordMessage", {
+        to: clientId,
+        word: inputRef.current.value,
+      });
+      setMessages([
+        ...messages,
+        {
+          word: inputRef.current.value,
+          type: "user",
+        },
+      ]);
+    }
+  };
+
   return (
     <ChatLayout>
       <ScoreDashboard />
-      <MessageArena />
+      <MessageArena messages={messages} />
       <InputContainer>
         <FormContainer>
-          <StyledInput type="text" />
+          <StyledInput type="text" ref={inputRef} />
         </FormContainer>
-        <StyledButton>Send</StyledButton>
+        <StyledButton onClick={handleSend}>Send</StyledButton>
       </InputContainer>
     </ChatLayout>
   );

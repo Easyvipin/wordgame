@@ -30,6 +30,11 @@ io.on("connection", (socket) => {
       from: userData,
     });
   });
+  socket.on("wordMessage", ({ to: clientId, word }) => {
+    io.to(clientId).emit("gotMessage", {
+      word,
+    });
+  });
 
   /* socket.on("callSignal", ({ calledId, from, userName }) => {
     console.log(calledId);
