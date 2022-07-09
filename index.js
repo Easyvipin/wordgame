@@ -2,6 +2,7 @@ const app = require("express")();
 const cors = require("cors");
 const server = require("http").createServer(app);
 const { Server } = require("socket.io");
+require("dotenv").config();
 
 const io = new Server(server, {
   cors: {
@@ -30,9 +31,20 @@ io.on("connection", (socket) => {
       from: userData,
     });
   });
-  socket.on("wordMessage", ({ to: clientId, word }) => {
+  socket.on("wordMessage", ({ to: clientId, word, status }) => {
+    console.log(clientId);
     io.to(clientId).emit("gotMessage", {
       word,
+      status,
+    });
+  });
+
+  socket.on("valid", ({ from, word, result }) => {
+    console.log("called api");
+    socket.timeout(10000).broadcast.emit("wordStatus", {
+      word,
+      status: result,
+      from,
     });
   });
 

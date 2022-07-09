@@ -1,3 +1,4 @@
+import validationFetch from "@app/apiUtils";
 import React, { createContext, useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
 
@@ -18,6 +19,8 @@ const SocketContextProvider = ({ children }) => {
   const [level, setLevel] = useState("easy");
   const [turns, setTurns] = useState(4);
   const [messages, setMessages] = useState([]);
+  const [clientScore, setClientScore] = useState(0);
+  const [userScore, setUserScore] = useState(0);
 
   useEffect(() => {
     socket.on("clientConnected", (id) => {
@@ -43,18 +46,36 @@ const SocketContextProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    socket.on("gotMessage", ({ word }) => {
+    socket.on("gotMessage", ({ word, status }) => {
       setMessages([
         ...messages,
         {
           word,
           type: "client",
+          status,
         },
       ]);
     });
   }, [messages]);
 
-  console.log(messages);
+  useEffect(() => {
+    if (messages.length > 2)
+      socket.on("wordStatus", ({ word, status, from }) => {
+        console.log("clledvalid");
+        let existMessages = [...messages];
+        existMessages[existMessages.length - 1].status = status;
+        setMessages(existMessages);
+        changeScore(from, word);
+      });
+  }, [messages]);
+
+  const changeScore = (from, word) => {
+    if (from === userId) {
+      setUserScore(userScore + 10);
+    } else {
+      setClientScore(clientScore + 10);
+    }
+  };
 
   const sendRequest = (userData, clientData) => {
     setSignaling(true);
@@ -96,6 +117,8 @@ const SocketContextProvider = ({ children }) => {
         acceptRequest,
         setMessages,
         messages,
+        userScore,
+        clientScore,
       }}
     >
       {children}

@@ -7,6 +7,7 @@ import { SocketContext } from "@app/Contexts/SocketContext";
 import { useContext } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
+import validationFetch from "@app/apiUtils";
 
 const ChatLayout = styled.div`
   box-sizing: border-box;
@@ -73,24 +74,36 @@ const StyledButton = styled.button`
 const ChatComponent = () => {
   const { socket, userId, clientId, setMessages, messages } =
     useContext(SocketContext);
+
   const inputRef = useRef();
-  console.log(clientId);
-  const handleSend = () => {
-    console.log("called");
+  let result;
+  const handleSend = async () => {
     if (inputRef.current.value.length > 2) {
       console.log("called");
       socket.emit("wordMessage", {
         to: clientId,
         word: inputRef.current.value,
+        status: "checking",
       });
       setMessages([
         ...messages,
         {
           word: inputRef.current.value,
           type: "user",
+          status: "checking",
         },
       ]);
+      let result = await validationFetch(inputRef.current.value);
+      emitTheValidation(result, inputRef.current.value);
     }
+  };
+
+  const emitTheValidation = (result, word) => {
+    socket.emit("valid", {
+      from: userId,
+      word,
+      result,
+    });
   };
 
   return (
@@ -99,7 +112,7 @@ const ChatComponent = () => {
       <MessageArena messages={messages} />
       <InputContainer>
         <FormContainer>
-          <StyledInput type="text" ref={inputRef} />
+          <StyledInput type="text" ref={inputRef} onChange />
         </FormContainer>
         <StyledButton onClick={handleSend}>Send</StyledButton>
       </InputContainer>

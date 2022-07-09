@@ -12,7 +12,7 @@ import { useEffect } from "react";
 const App = () => {
   const { signaling } = useContext(SocketContext);
   const queryObj = queryString.parse(window.location.search);
-
+  console.log(process.env);
   return (
     <div>
       <FlexContainer justifyContent="flex-start" alignItems="flex-start">

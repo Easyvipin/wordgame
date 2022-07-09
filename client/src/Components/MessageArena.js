@@ -57,14 +57,26 @@ const Icon = styled.img`
 /* <img src="https://img.icons8.com/flat-round/64/000000/delete-sign.png"/> */
 
 const MessageArena = ({ messages }) => {
+  const getImageUrlBasedOnStatus = (status) => {
+    if (status) {
+      return "https://img.icons8.com/color/48/000000/verified-account.png";
+    } else {
+      return "https://img.icons8.com/flat-round/64/000000/delete-sign.png";
+    }
+  };
+
   const renderMessageOnType = () => {
     return messages.map((eachMessage) => (
       <Message side={eachMessage.type}>
         <Text>{eachMessage.word}</Text>
-        <Icon
-          side={eachMessage.type}
-          src="https://img.icons8.com/color/48/000000/verified-account.png"
-        ></Icon>
+        {eachMessage.status === "checking" ? (
+          <Icon side={eachMessage.type} src={VerifyIcon}></Icon>
+        ) : (
+          <Icon
+            side={eachMessage.type}
+            src={getImageUrlBasedOnStatus(eachMessage.status)}
+          ></Icon>
+        )}
       </Message>
     ));
   };

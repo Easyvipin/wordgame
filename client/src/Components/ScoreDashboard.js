@@ -3,6 +3,8 @@ import media from "@app/themes/media";
 import fonts from "@app/themes/fonts";
 import React from "react";
 import styled from "styled-components";
+import { SocketContext } from "@app/Contexts/SocketContext";
+import { useContext } from "react";
 
 const Container = styled.div`
   flex: 2;
@@ -121,17 +123,19 @@ const WordContainer = styled.div`
 `;
 
 const ScoreDashboard = () => {
+  const { userName, clientName, userScore, clientScore } =
+    useContext(SocketContext);
   return (
     <Container>
       <WordContainer>W</WordContainer>
       <FlexContainer>
         <UserPlayerStatsContainer>
-          <UserText>Name</UserText>
-          <UserStyledScore>40</UserStyledScore>
+          <UserText>{userName}</UserText>
+          <UserStyledScore>{userScore}</UserStyledScore>
         </UserPlayerStatsContainer>
         <ClientPlayerStatsContainer>
-          <ClientStyledScore>40</ClientStyledScore>
-          <ClientText>Name</ClientText>
+          <ClientStyledScore>{clientScore}</ClientStyledScore>
+          <ClientText>{clientName}</ClientText>
         </ClientPlayerStatsContainer>
       </FlexContainer>
     </Container>
