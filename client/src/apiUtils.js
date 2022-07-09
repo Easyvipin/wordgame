@@ -1,11 +1,13 @@
 import axios from "axios";
+
+const token = process.env.REACT_APP_OWL_ACCESS_TOKEN;
 const validationFetch = async (word) => {
   try {
     let res = await axios
       .get(`/${word}`, {
         headers: {
           "Access-Control-Allow-Origin": "*",
-          Authorization: `Token 029916b8079a7224e66443aa114ff14ccc1d8d99`,
+          Authorization: `Token ${token}`,
         },
       })
       .then((response) => response.statusText === "OK");
