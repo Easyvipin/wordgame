@@ -22,6 +22,9 @@ const SocketContextProvider = ({ children }) => {
   const [clientScore, setClientScore] = useState(0);
   const [userScore, setUserScore] = useState(0);
 
+  console.log(userScore);
+  console.log(clientScore);
+
   useEffect(() => {
     socket.on("clientConnected", (id) => {
       setUserId(id);
@@ -59,21 +62,27 @@ const SocketContextProvider = ({ children }) => {
   }, [messages]);
 
   useEffect(() => {
-    if (messages.length > 2)
-      socket.on("wordStatus", ({ word, status, from }) => {
-        console.log("clledvalid");
-        let existMessages = [...messages];
-        existMessages[existMessages.length - 1].status = status;
-        setMessages(existMessages);
-        changeScore(from, word);
+    socket.on("wordStatus", ({ word, status, from }) => {
+      setMessages((prevState) => {
+        prevState[prevState.length - 1].status = status;
+        return prevState;
       });
+      changeScore(from, word, status);
+    });
   }, [messages]);
 
-  const changeScore = (from, word) => {
-    if (from === userId) {
-      setUserScore(userScore + 10);
-    } else {
-      setClientScore(clientScore + 10);
+  const changeScore = (from, word, status) => {
+    console.log(from, word, status);
+    if (status) {
+      console.log(userId);
+      console.log(from === userId);
+      if (from === userId) {
+        console.log(true);
+        setUserScore(userScore + 10);
+      } else {
+        console.log("called client");
+        setClientScore(clientScore + 10);
+      }
     }
   };
 

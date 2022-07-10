@@ -94,7 +94,10 @@ const ChatComponent = () => {
         },
       ]);
       let result = await validationFetch(inputRef.current.value);
-      emitTheValidation(result, inputRef.current.value);
+
+      setTimeout(() => {
+        emitTheValidation(result, inputRef.current.value);
+      }, 4000);
     }
   };
 

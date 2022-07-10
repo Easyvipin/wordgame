@@ -40,8 +40,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("valid", ({ from, word, result }) => {
-    console.log("called api");
-    socket.timeout(10000).broadcast.emit("wordStatus", {
+    console.log(from);
+    io.local.emit("wordStatus", {
       word,
       status: result,
       from,
