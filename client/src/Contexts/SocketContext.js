@@ -1,6 +1,7 @@
 import validationFetch from "@app/apiUtils";
 import React, { createContext, useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
+import { calculateScore } from "@app/utils/index";
 
 const SocketContext = createContext();
 const socket = io("http://localhost:5000");
@@ -21,9 +22,6 @@ const SocketContextProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const [clientScore, setClientScore] = useState(0);
   const [userScore, setUserScore] = useState(0);
-
-  console.log(userScore);
-  console.log(clientScore);
 
   useEffect(() => {
     socket.on("clientConnected", (id) => {
@@ -50,41 +48,47 @@ const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     socket.on("gotMessage", ({ word, status }) => {
-      setMessages([
-        ...messages,
-        {
-          word,
-          type: "client",
-          status,
-        },
-      ]);
+      setMessages((prevMessages) => {
+        return [
+          ...prevMessages,
+          {
+            word,
+            type: "client",
+            status,
+          },
+        ];
+      });
     });
-  }, [messages]);
+  }, []);
 
   useEffect(() => {
     socket.on("wordStatus", ({ word, status, from }) => {
+      console.log("console socker");
       setMessages((prevState) => {
-        prevState[prevState.length - 1].status = status;
-        return prevState;
+        const newState = prevState.map((obj) => {
+          if (obj.word === word) {
+            return { ...obj, status: status };
+          } else {
+            return obj;
+          }
+        });
+        return newState;
       });
-      changeScore(from, word, status);
     });
-  }, [messages]);
+  }, []);
 
-  const changeScore = (from, word, status) => {
-    console.log(from, word, status);
-    if (status) {
-      console.log(userId);
-      console.log(from === userId);
-      if (from === userId) {
-        console.log(true);
-        setUserScore(userScore + 10);
+  useEffect(() => {
+    let lastMessage;
+    if (messages.length > 0) {
+      lastMessage = messages[messages.length - 1];
+      let score = calculateScore(messages[messages.length - 1]);
+      if (lastMessage.type === "user") {
+        setUserScore((prevScore) => prevScore + score);
       } else {
-        console.log("called client");
-        setClientScore(clientScore + 10);
+        setClientScore((prevScore) => prevScore + score);
       }
     }
-  };
+  }, [messages]);
 
   const sendRequest = (userData, clientData) => {
     setSignaling(true);

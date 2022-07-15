@@ -40,7 +40,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("valid", ({ from, word, result }) => {
-    console.log(from);
     io.local.emit("wordStatus", {
       word,
       status: result,

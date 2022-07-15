@@ -26,7 +26,7 @@ const ConnectContainer = styled.div`
   width:90%;
   flex-wrap:wrap;
    `}
-  flex-wrap: wrap;
+  flex-wrap: wrap; 
 `;
 
 const StyledButton = styled.button`
@@ -98,6 +98,9 @@ const ConnectInterface = () => {
     };
     acceptRequest(userData, clientData);
   };
+
+  
+
 
   const openShareInterface = () => {
     if (!navigator.share) {
